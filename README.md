@@ -1,16 +1,20 @@
-# notes
+# NoteMate - Flutter Notes App
 
-A new Flutter project.
+A fast and clean notes app made with Flutter. Save your thoughts, like important notes, and find anything instantly with smart search. Comes with both dark and light modes. Built using SQLite and Shared Preferences for smooth offline storage.
 
-## Getting Started
+## Features
+- Create and manage notes
+- Like important notes
+- Search notes instantly
+- Dark & Light mode
+- Offline storage with SQLite
+- Settings stored using Shared Preferences
 
-This project is a starting point for a Flutter application.
+## Tech Stack
+- Flutter
+- Dart
+- SQLite
+- Shared Preferences
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
