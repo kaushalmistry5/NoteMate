@@ -36,11 +36,11 @@ class DatabaseHelper {
       is_pinned INTEGER DEFAULT 0,
       is_favourite INTEGER DEFAULT 0,
       created_at TEXT NOT NULL,
-      modifier_at TEXT NOT NULL,
+      modified_at TEXT NOT NULL,
       attachments TEXT,
       content_json TEXT,
-      FOREIGN_KEY (folder_id) REFERENCES ${AppConstants.tableFolders} (id) ON DELETE SET NULL
-    )
+      FOREIGN KEY (folder_id) REFERENCES ${AppConstants.tableFolders} (id) ON DELETE SET NULL
+    ) 
     ''');
 
     await db.execute('''
