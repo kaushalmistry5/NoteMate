@@ -5,6 +5,7 @@ import 'package:notes/models/folder_model.dart';
 import 'package:notes/providers/note_provider.dart';
 import 'package:notes/providers/settings_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../widget/note_card.dart';
 
@@ -24,9 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<NoteProvider>(
       builder: (context, noteProvider, _) {
         String title = 'NoteMate';
-        if (noteProvider.selectedFolderId != null){
-          final folder = noteProvider.folders.firstWhere((f) => f.id == noteProvider.selectedFolderId,
-          orElse: () => noteProvider.folders.first
+        if (noteProvider.selectedFolderId != null) {
+          final folder = noteProvider.folders.firstWhere((f) =>
+          f.id == noteProvider.selectedFolderId,
+              orElse: () => noteProvider.folders.first
           );
           title = folder.name;
         }
@@ -34,39 +36,176 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           appBar: AppBar(
             title: Text(title),
-            leading: noteProvider.selectedFolderId != null ? IconButton(onPressed: () {
-              noteProvider.setSelectedFolder(null);
-            }, icon: Icon(Icons.arrow_back)) : null,
+            leading: noteProvider.selectedFolderId != null ? IconButton(
+                onPressed: () {
+                  noteProvider.setSelectedFolder(null);
+                }, icon: Icon(Icons.arrow_back)) : null,
             actions: [
               IconButton(onPressed: () {
                 //Navigator.push(context, MaterialPageRoute(builder: (_) => SearchScreen()));
               },
-          icon: Icon(Icons.search),
+                icon: Icon(Icons.search),
               ),
               Consumer<SettingsProvider>(
                 builder: (context, settings, _) {
                   return IconButton(
-                    onPressed: (){
-                    settings.setViewMode(!settings.isGridView);
-                  },
-                  icon: Icon(settings.isGridView ? Icons.view_list : Icons.grid_view),
+                    onPressed: () {
+                      settings.setViewMode(!settings.isGridView);
+                    },
+                    icon: Icon(settings.isGridView ? Icons.view_list : Icons
+                        .grid_view),
                   );
                 },
               ),
               IconButton(
-                  onPressed: () {
-                    //Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen)));
-                  },
+                onPressed: () {
+                  //Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen)));
+                },
                 icon: Icon(Icons.settings_outlined),
               ),
-                ],
-              ),
+            ],
+          ),
           body: _buildBody(),
-          );
+          floatingActionButton: _selectedIndex == 1 || _selectedIndex == 3
+              ? null
+              :
+          FloatingActionButton(
+            onPressed: () {
+              if (_selectedIndex == 2) {
+                _showCreateFolderDialog();
+              } else {
+                /*Navigator
+                    .push(context,
+                    MaterialPageRoute(builder: (_) => NoteEditorScreen()))
+                    .then((_) {
+                  Provider.of<NoteProvider>(context, listen: false).loadNotes();
+                });*/
+              }
+            },
+            elevation: 0,
+            backgroundColor: Theme
+                .of(context)
+                .brightness == Brightness.dark ? Colors.white : Colors.black87,
+            foregroundColor: Theme
+                .of(context)
+                .brightness == Brightness.dark ? Colors.black87 : Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(Icons.add, size: 28,),
+          ),
+
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              color: Theme
+                  .of(context)
+                  .scaffoldBackgroundColor,
+              border: Border(
+                top: BorderSide(
+                  color: Theme
+                      .of(context)
+                      .dividerColor
+                      .withValues(alpha: 0.1), width: 1,
+                ),
+              ),
+            ),
+            child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildNavItem(
+                        icon: Icons.note_rounded,
+                        selectedIcon: Icons.note,
+                        label: 'Notes',
+                        index: 0,
+                      ),
+                      _buildNavItem(
+                        icon: Icons.favorite_border,
+                        selectedIcon: Icons.favorite,
+                        label: 'Favourites',
+                        index: 1,
+                      ),
+                      _buildNavItem(
+                        icon: Icons.folder_outlined,
+                        selectedIcon: Icons.folder,
+                        label: 'Folders',
+                        index: 2,
+                      ),
+                      _buildNavItem(
+                        icon: Icons.schedule_outlined,
+                        selectedIcon: Icons.schedule,
+                        label: 'Recent',
+                        index: 3,
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+        );
       },
     );
   }
 
+  Widget _buildNavItem({
+    required IconData icon,
+    required IconData selectedIcon,
+    required String label,
+    required int index,
+  }) {
+    final isSelected = _selectedIndex == index;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return GestureDetector(
+        onTap: () {
+          setState(() {
+          _selectedIndex = index;
+        });
+    final noteProvider = Provider.of<NoteProvider>(context, listen: false);
+    if (index == 0) {
+      noteProvider.setSelectedFolder(null);
+    }
+  },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              padding: EdgeInsets.all(6),
+              child: Icon(
+                isSelected ? selectedIcon : icon,
+                color: isSelected ? (isDark ? Colors.white : Colors.black87) : (isDark ? Colors.grey[600] : Colors.grey[400]),
+                size: 26,
+              ),
+            ),
+            SizedBox(height: 2,),
+            AnimatedDefaultTextStyle(
+              duration: Duration(milliseconds: 300),
+              style: TextStyle(
+                color: isSelected ? (isDark ? Colors.white : Colors.black87) : (isDark ? Colors.grey[600] : Colors.grey[400]),
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                letterSpacing: 0.5,
+              ),
+              child: Text(label),
+            ),
+            SizedBox(height: 4,),
+             AnimatedContainer(
+               duration: Duration(milliseconds: 300),
+               curve: Curves.easeInOut,
+               height: 3,
+               width: isSelected ? 24 :0,
+               decoration: BoxDecoration(
+                 color: isDark ? Colors.white : Colors.black87,
+                 borderRadius: BorderRadius.circular(2),
+               ),
+             )
+          ],
+        ),
+    );
+  }
   Widget _buildBody() {
     if (_selectedIndex == 2) {
       return _buildFolderList();
@@ -319,6 +458,39 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Text('Delete', style: TextStyle(color: Colors.red),),
             ),
+          ],
+        ),
+    );
+  }
+
+  void _showCreateFolderDialog() {
+    final controller = TextEditingController();
+
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('New Folder'),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: 'Folder Name',
+            ),
+            autofocus: true,
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
+            TextButton(onPressed: () {
+              if(controller.text.isNotEmpty){
+                final folder = FolderModel(
+                  id: Uuid().v4(),
+                  name: controller.text,
+                );
+                Provider.of(context);
+              }
+            },
+              child: Text('Create'),
+            ),
+
           ],
         ),
     );

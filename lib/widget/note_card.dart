@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:notes/models/note_model.dart';
 import 'package:notes/providers/note_provider.dart';
 import 'package:notes/theme/app_colors.dart';
@@ -17,17 +18,17 @@ class NoteCard extends StatelessWidget{
     return Card(
       color: noteColor,
       child: InkWell(
-        // onTap: () {
-        //   Navigator.push(context, MaterialPageRoute(builder: (_) => NoteEditorScreen(note: note))).then((_)
-        //   {
-        //     Provider.of<NoteProvider>(context, listen: false).loadNotes();
-        //
-        //   });
-        // },
+        onTap: () {
+         /* Navigator.push(context, MaterialPageRoute(builder: (_) => NoteEditorScreen(note: note))).then((_)
+          {
+            Provider.of<NoteProvider>(context, listen: false).loadNotes();
 
-        // onLongPress: (){
-        //   _showBottomSheet(context);
-        // },
+          });*/
+        },
+
+        onLongPress: (){
+          _showBottomSheet(context);
+        },
         borderRadius: BorderRadius.circular(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,10 +70,78 @@ class NoteCard extends StatelessWidget{
               )
             ],
             SizedBox(height: 12,),
-
+            Text(
+              DateFormat('MM DD, YYYY" hh:mm a').format(note.modifiedAt),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: _getTextColorForBackground(noteColor),
+              ),
+            )
           ],
         ),
       ),
+    );
+  }
+
+  Color _getTextColorForBackground(Color backgroundColor){
+    final luminance = backgroundColor.computeLuminance();
+    return luminance > 0.5 ? Colors.black54 : Colors.white70;
+  }
+
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context){
+          return SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: Icon(note.isPinned ? Icons.push_pin_outlined : Icons.push_pin),
+                    title: Text(note.isPinned ? 'Unpin' : 'Pin'),
+                    onTap: () {
+                      Provider.of<NoteProvider>(context, listen: false).togglePinNote(note.id!);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(note.isFavourite ? Icons.favorite : Icons.favorite_border),
+                    title: Text(note.isPinned ? 'Remove from favourite' : 'Add to favourite'),
+                    onTap: () {
+                      Provider.of<NoteProvider>(context, listen: false).toggleFavouriteNote(note.id!);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.delete, color: Colors.red,),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showBottomSheet(context);
+                    },
+                  )
+                ],
+              ));
+        }
+    );
+  }
+  
+  void _showDeleteDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Delete Note?'),
+          content: Text('Are you sure to delete this note?'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context), child: Text('Cancel')),
+            TextButton(
+                onPressed: (){
+                  Provider.of<NoteProvider>(context, listen: false).deleteNote(note.id!);
+                  Navigator.pop(context);
+                },
+              child: Text('Delete', style: TextStyle(color: Colors.red),),
+            )
+          ],
+        )
     );
   }
 }
