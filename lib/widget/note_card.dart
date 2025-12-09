@@ -5,6 +5,8 @@ import 'package:notes/providers/note_provider.dart';
 import 'package:notes/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/note_editor_screen.dart';
+
 class NoteCard extends StatelessWidget{
   final NoteModel note;
 
@@ -19,11 +21,11 @@ class NoteCard extends StatelessWidget{
       color: noteColor,
       child: InkWell(
         onTap: () {
-         /* Navigator.push(context, MaterialPageRoute(builder: (_) => NoteEditorScreen(note: note))).then((_)
+          Navigator.push(context, MaterialPageRoute(builder: (_) => NoteEditorScreen(note: note))).then((_)
           {
             Provider.of<NoteProvider>(context, listen: false).loadNotes();
 
-          });*/
+          });
         },
 
         onLongPress: (){

@@ -8,13 +8,13 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../widget/note_card.dart';
+import 'note_editor_screen.dart';
 
 class HomeScreen extends StatefulWidget{
   HomeScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _HomeScreenState();
-
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -74,12 +74,10 @@ class _HomeScreenState extends State<HomeScreen> {
               if (_selectedIndex == 2) {
                 _showCreateFolderDialog();
               } else {
-                /*Navigator
-                    .push(context,
-                    MaterialPageRoute(builder: (_) => NoteEditorScreen()))
-                    .then((_) {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => NoteEditorScreen())).then((_)
+                {
                   Provider.of<NoteProvider>(context, listen: false).loadNotes();
-                });*/
+                });
               }
             },
             elevation: 0,
