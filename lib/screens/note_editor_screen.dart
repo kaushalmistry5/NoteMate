@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notes/models/note_model.dart';
@@ -5,6 +7,8 @@ import 'package:notes/providers/note_provider.dart';
 import 'package:notes/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+
+import '../widget/color_picker.dart';
 
 class NoteEditorScreen extends StatefulWidget{
   final NoteModel? note;
@@ -100,7 +104,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           ),
           actions: [
             GestureDetector(
-              //onTap: _showColorPicker,
+              onTap: _showColorPicker,
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                 width: 32,
@@ -129,7 +133,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             ),
             IconButton(
                 onPressed: (){
-                 // _showOptionMenu();
+                  _showOptionsMenu();
                 },
                 icon: Icon(Icons.more_vert),
             ),
@@ -180,17 +184,186 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 child: Stack(
                   children: [
                     ClipRRect(
-                      //borderRadius: BorderRadius,
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        File(_attachments[index]),
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Positioned(
+                      top: 4,
+                      right: 4,
+                      child: InkWell(
+                        onTap: (){
+                          setState(() {
+                            _attachments.removeAt(index);
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.close,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     )
                   ],
                 ),
               );
             },
           ),
-        )
+        ),
+        SizedBox(height: 16,),
       ],
+      TextField(
+        controller: _contentController,
+        style: Theme.of(context).textTheme.bodyLarge,
+        decoration: InputDecoration(
+          hintText: 'Start Writing...',
+          border: InputBorder.none,
+        ),
+        maxLines: null,
+        textCapitalization: TextCapitalization.sentences,
+      )
     ],
     ),
+        ),
+    );
+  }
+  void _showColorPicker(){
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => ColorPickerWidget(
+          selectedColorIndex: _selectedColorIndex,
+          onColorSelected: (index) {
+            setState(() {
+              _selectedColorIndex =index;
+            });
+            Navigator.pop(context);
+          },
+        ),
+    );
+  }
+
+  void _showOptionsMenu() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.label_outline),
+                title: Text('Add Tag'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showAddTagDialog();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.folder_outlined),
+                title: Text('Move to Folder'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showFolderSelector();
+                },
+              ),
+            ],
+          ),
+        )
+    );
+  }
+
+  void _showAddTagDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Add Tag'),
+          content: TextField(
+            controller: _tagsController,
+            decoration: InputDecoration(
+              hintText: 'Enter Tag Name',
+            ),
+            autofocus: true,
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel'),
+            ),
+            TextButton(
+                onPressed: () {
+                  if (_tagsController.text.isNotEmpty) {
+                    setState(() {
+                      _tags.add(_tagsController.text);
+                    });
+                    _tagsController.clear();
+                  }
+                  Navigator.pop(context);
+                },
+                child: Text('Add'),
+            ),
+          ],
+        ),
+    );
+  }
+
+  void _showFolderSelector() {
+    final noteProvider = Provider.of<NoteProvider>(context,listen: false);
+    final folders = noteProvider.folders;
+
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                    padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Select Folder',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.note_outlined),
+                  title: Text('No Folder'),
+                  trailing: _selectedFolderId == null
+                    ? Icon(Icons.check, color: Colors.blue,)
+                      :null,
+                  onTap: (){
+                    setState(() {
+                      _selectedFolderId = null;
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+                Divider(),
+                ...folders.map((folders){
+                  return ListTile(
+                    leading: Icon(Icons.folder),
+                    title: Text(folders.name),
+                    trailing: _selectedFolderId == folders.id
+                      ? Icon(Icons.check, color: Colors.blue,)
+                        :null,
+                    onTap: () {
+                      setState(() {
+                        _selectedFolderId = folders.id;
+                      });
+                      Navigator.pop(context);
+                    },
+                  );
+                })
+              ],
+            ),
         ),
     );
   }

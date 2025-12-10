@@ -4,6 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:notes/models/folder_model.dart';
 import 'package:notes/providers/note_provider.dart';
 import 'package:notes/providers/settings_provider.dart';
+import 'package:notes/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -59,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  //Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen)));
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen()));
                 },
                 icon: Icon(Icons.settings_outlined),
               ),
