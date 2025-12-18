@@ -4,7 +4,6 @@ import 'package:notes/models/note_model.dart';
 import 'package:notes/providers/note_provider.dart';
 import 'package:notes/theme/app_colors.dart';
 import 'package:provider/provider.dart';
-
 import '../screens/note_editor_screen.dart';
 
 class NoteCard extends StatelessWidget{
@@ -39,7 +38,7 @@ class NoteCard extends StatelessWidget{
                 Row(
                   children: [
                     Expanded(child: Text(
-                      note.title.isNotEmpty ? "Untitled" : note.title,
+                      note.title.isEmpty ? "Untitled" : note.title,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -74,7 +73,7 @@ class NoteCard extends StatelessWidget{
                 ],
                 SizedBox(height: 12,),
                 Text(
-                  DateFormat('MM DD, YYYY" hh:mm a').format(note.modifiedAt),
+                  DateFormat('dd-MM-yyy   hh:mm a').format(note.modifiedAt),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: _getTextColorForBackground(noteColor),
                   ),

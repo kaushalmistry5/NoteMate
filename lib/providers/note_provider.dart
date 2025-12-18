@@ -18,8 +18,8 @@ class NoteProvider extends ChangeNotifier{
     List<NoteModel> filteredNotes = _notes;
 
     if(_selectedFolderId != null) {
-      filteredNotes = filteredNotes.where((note) => note.folderId == _selectedFolderId)
-          .toList();
+      filteredNotes = filteredNotes.where((note) => note.folderId == _selectedFolderId
+      ).toList();
     }
 
     if(_searchQuery.isNotEmpty){

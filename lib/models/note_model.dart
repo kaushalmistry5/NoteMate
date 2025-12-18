@@ -37,13 +37,13 @@ class NoteModel {
       'content': content,
       'folder_id': folderId,
       'tags': jsonEncode(tags),
-      'colorIndex': colorIndex,
-      'isPinned': isPinned ? 1: 0,
-      'isFavourite': isFavourite ? 1 : 0,
-      'createdAt': createdAt.toIso8601String(),
-      'modifiedAt': modifiedAt.toIso8601String(),
+      'color_index': colorIndex,
+      'is_pinned': isPinned ? 1: 0,
+      'is_favourite': isFavourite ? 1 : 0,
+      'created_at': createdAt.toIso8601String(),
+      'modified_at': modifiedAt.toIso8601String(),
       'attachments': jsonEncode(attachments),
-      'contentJson': contentJson,
+      'content_json': contentJson,
     };
   }
 
@@ -54,13 +54,13 @@ class NoteModel {
       content: map['content'] ?? '',
       folderId: map['folder_id'],
       tags: map['tags'] != null ? List<String>.from(jsonDecode(map['tags'])) : [],
-      colorIndex: map['colorIndex'] ?? 0,
-      isPinned: map['isPinned'] == 1,
+      colorIndex: map['color_index'] ?? 0,
+      isPinned: map['is_pinned'] == 1,
       isFavourite: map['is_favourite'] == 1,
-      createdAt: DateTime.parse(map['createdAt']),
-      modifiedAt: DateTime.parse(map['modifiedAt']),
+      createdAt: DateTime.parse(map['created_at']),
+      modifiedAt: DateTime.parse(map['modified_at']),
       attachments: map['attachments'] != null ? List<String>.from(jsonDecode(map['attachments'])) : [],
-      contentJson: map['contentJson'],
+      contentJson: map['content_json'],
     );
   }
 
@@ -100,15 +100,15 @@ class NoteModel {
       'id': id,
       'title': title,
       'content': content,
-      'folderId': folderId,
+      'folder_id': folderId,
       'tags': tags,
-      'colorIndex': colorIndex,
-      'isPinned': isPinned,
-      'isFavourite': isFavourite,
-      'createdAt': createdAt,
-      'modifiedAt': modifiedAt,
+      'color_index': colorIndex,
+      'is_pinned': isPinned,
+      'is_favourite': isFavourite,
+      'created_at': createdAt,
+      'modified_at': modifiedAt,
       'attachments': attachments,
-      'contentJson': contentJson,
+      'content_Json': contentJson,
     };
   }
 
@@ -117,15 +117,15 @@ class NoteModel {
       id: json['id'],
       title: json['title'],
       content: json['content'],
-      folderId: json['folderId'],
+      folderId: json['folder_id'],
       tags: List<String>.from(json['tags'] ?? []),
-      colorIndex: json['colorIndex'] ?? 0,
-      isPinned: json['isPinned'] ?? false,
+      colorIndex: json['color_index'] ?? 0,
+      isPinned: json['is_pinned'] ?? false,
       isFavourite: json['is_favourite'] ?? false,
-      createdAt: DateTime.parse(json['createdAt']),
-      modifiedAt: DateTime.parse(json['modifiedAt']),
+      createdAt: DateTime.parse(json['created_at']),
+      modifiedAt: DateTime.parse(json['modified_at']),
       attachments: List<String>.from(json['attachments'] ?? []),
-      contentJson: json['contentJson'],
+      contentJson: json['content_json'],
 
     );
   }

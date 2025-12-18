@@ -68,6 +68,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       );
 
       if(widget.note == null) {
+        print("my notes is ${note.toMap()}");
+
         await noteProvider.createNote(note);
       } else{
         await noteProvider.updateNote(note);

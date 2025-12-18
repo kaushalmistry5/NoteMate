@@ -11,7 +11,7 @@ class NoteRepository {
   Future<String> createNote(NoteModel note) async {
     final noteWithId = note.copyWith(
       id: note.id ?? _uuid.v4(),
-      modifiedAt: DateTime.now(),
+      modifiedAt: DateTime.now()
     );
     return await _dbHelper.insertNote(noteWithId);
   }
