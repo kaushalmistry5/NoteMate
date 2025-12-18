@@ -21,18 +21,20 @@ class HomeScreen extends StatefulWidget{
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-
+  //selected folder is 7fd1489b-e0e8-42b2-9e1d-1e501d4966b2
   @override
   Widget build(BuildContext context) {
     return Consumer<NoteProvider>(
       builder: (context, noteProvider, _) {
         String title = 'NoteMate';
         if (noteProvider.selectedFolderId != null) {
+          print("my folder id is ${noteProvider.selectedFolderId}");
           final folder = noteProvider.folders.firstWhere((f) =>
           f.id == noteProvider.selectedFolderId,
               orElse: () => noteProvider.folders.first
           );
           title = folder.name;
+          print("my folder name is ${folder.name}  ${folder.id}");
         }
 
         return Scaffold(
@@ -67,11 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+
           body: _buildBody(),
-          floatingActionButton: _selectedIndex == 1 || _selectedIndex == 3
-              ? null
-              :
-          FloatingActionButton(
+
+          floatingActionButton: _selectedIndex == 1 || _selectedIndex == 3 ? null : FloatingActionButton(
             onPressed: () {
               if (_selectedIndex == 2) {
                 _showCreateFolderDialog();
@@ -156,7 +157,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }) {
     final isSelected = _selectedIndex == index;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return GestureDetector(
         onTap: () {
           setState(() {
@@ -220,7 +220,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if(_selectedIndex == 1){
           notes = notes.where((note) => note.isFavourite).toList();
-        } else if(_selectedIndex == 3){
+        }
+        else if(_selectedIndex == 3){
           notes.sort((a,b) => b.modifiedAt.compareTo(a.modifiedAt));
           notes = notes.take(20).toList();
         }
@@ -253,6 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
   Widget _buildGridView(List notes) {
     return AnimationLimiter(
         child: GridView.builder(
@@ -481,11 +483,15 @@ class _HomeScreenState extends State<HomeScreen> {
             TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
             TextButton(onPressed: () {
               if(controller.text.isNotEmpty){
+                print("we are here");
+
                 final folder = FolderModel(
                   id: Uuid().v4(),
                   name: controller.text,
                 );
-                Provider.of(context);
+                Provider.of<NoteProvider>(context, listen: false).createFolder(folder);
+                Navigator.pop(context);
+                //Provider.of<NoteProvider>(context).createFolder(folder);
               }
             },
               child: Text('Create'),

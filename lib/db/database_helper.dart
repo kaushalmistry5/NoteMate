@@ -32,6 +32,7 @@ class DatabaseHelper {
       title TEXT NOT NULL,
       content TEXT NOT NULL,
       folder_id TEXT,
+      tags TEXT,
       color_index INTEGER DEFAULT 0,
       is_pinned INTEGER DEFAULT 0,
       is_favourite INTEGER DEFAULT 0,
