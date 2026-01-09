@@ -12,7 +12,7 @@ This project focuses on writing clean Flutter code and implementing local data p
 ### Core Screens
 <p float="left">
   <img src="screenshots/home_screen.png" width="250"/>
-  <img src="screenshots/add_note.png" width="253"/>
+  <img src="screenshots/add_note.png" width="254"/>
 </p>
 
 ### Favourite & Folder Screens
