@@ -10,25 +10,25 @@ This project focuses on writing clean Flutter code and implementing local data p
 ## 📱 Screenshots
 
 ### Home Screen
-![Home Screen](screenshots/home_screen.png)
+<img src="screenshots/home_screen.png" width="300"/>
 
 ### Add Note
-![Add Note](screenshots/add_note.png)
+<img src="screenshots/add_note.png" width="300"/>
 
 ### Favourites
-![Favourites Screen](screenshots/favourites.png)
+<img src="screenshots/favourites.png" width="300"/>
 
 ### Folders
-![Folders Page](screenshots/folders.png)
+<img src="screenshots/folders.png" width="300"/>
 
 ### Recents
-![Recent Page](screenshots/recents.png)
+<img src="screenshots/recents.png" width="300"/>
 
 ### Settings
-![Settings Screen](screenshots/settings.png)
+<img src="screenshots/settings.png" width="300"/>
 
 ### Dark Theme
-![Dark Theme](screenshots/dark_theme.png)
+<img src="screenshots/dark_theme.png" width="300"/>
 
 ---
 
